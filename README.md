@@ -15,7 +15,7 @@ O projeto consiste das seguintes etapas:
 * O pacote **pysolr** foi usado como cliente do Apache Solr na codificação do programa.
 ## Arquitetura do projeto
 
-<img src="diagram/diagram.png" alt="simple diagram of the project" width="50%" margin-left="auto" margin-right="auto"/>
+<img src="diagram/diagram.png" alt="simple diagram of the project" display="block" class="center" width="50%" margin-left="auto" margin-right="auto"/>
 
 Foram utilizadas duas classes para a codificação do projeto:
 1. A primeira classe se chama **CaptionProcessor** e é responsável pela recuperação e formatação da Caption do youtube, entregando somente as informações que serão indexadas.
