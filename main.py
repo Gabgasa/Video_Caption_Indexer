@@ -1,14 +1,20 @@
-#from youtube_transcript_api import YouTubeTranscriptApi
 import sys
 from CaptionProcessor import CaptionProcessor
 from IndexProcessor import IndexProcessor
 import Utils
+import yaml
 
 
 def main():
     assert len(sys.argv) == 3
     
-    solr_url = 'http://localhost:8983/solr/caption_indexer_core/'   
+    try:
+        with open("config.yaml", "r") as f:
+            config = yaml.load(f, Loader=yaml.FullLoader)
+    except:
+        Exception("Couldn't open config.yaml file.")
+    
+    solr_url = config['solr_url']
     youtube_link = sys.argv[1]
     query = sys.argv[2]
 

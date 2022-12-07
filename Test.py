@@ -2,12 +2,19 @@ import unittest
 from CaptionProcessor import CaptionProcessor
 from IndexProcessor import IndexProcessor
 import Utils
-import requests
+import yaml
 
 #For testing purpose
-yt_links = ['https://youtu.be/dsSbhW7JoCg',
-            'https://youtu.be/B9KjBEFZ3io',
-            'https://youtu.be/1sWNF4n6-pM']
+#yt_links = ['https://youtu.be/dsSbhW7JoCg',
+#            'https://youtu.be/B9KjBEFZ3io',
+#           'https://youtu.be/1sWNF4n6-pM']
+
+try:
+    with open("config.yaml", "r") as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+        solr_url = config["solr_url"]
+except:
+    Exception("Couldn't open config.yaml file.")
 
 class TestUtils(unittest.TestCase):
     def test_youtube_id_extractor(self):
@@ -42,7 +49,7 @@ class TestCaptionProcessor(unittest.TestCase):
 
 class TestIndexProcessor(unittest.TestCase):
     def test_search(self):
-        ip = IndexProcessor('http://localhost:8983/solr/caption_indexer_core/')        
+        ip = IndexProcessor(solr_url)        
         ip.clearIndex()        
         ip.indexCaption([ {'start': 1, 'caption': 'palavras juntas'},
                             {'start': 2, 'caption': 'palavras lorem ipsum juntas'},
