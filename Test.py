@@ -1,0 +1,71 @@
+import unittest
+from CaptionProcessor import CaptionProcessor
+from IndexProcessor import IndexProcessor
+import Utils
+import requests
+
+#For testing purpose
+yt_links = ['https://youtu.be/dsSbhW7JoCg',
+            'https://youtu.be/B9KjBEFZ3io',
+            'https://youtu.be/1sWNF4n6-pM']
+
+class TestUtils(unittest.TestCase):
+    def test_youtube_id_extractor(self):
+        self.assertEqual(Utils.youtubeIdExtractor('https://youtu.be/dsSbhW7JoCg'), 'dsSbhW7JoCg')
+        self.assertEqual(Utils.youtubeIdExtractor('https://www.youtube.com/watch?v=dsSbhW7JoCg'), 'dsSbhW7JoCg')
+
+        self.assertEqual(Utils.youtubeIdExtractor('https://youtu.be/B9KjBEFZ3io'), 'B9KjBEFZ3io')
+        self.assertEqual(Utils.youtubeIdExtractor('https://www.youtube.com/watch?v=B9KjBEFZ3io'), 'B9KjBEFZ3io')
+
+        self.assertEqual(Utils.youtubeIdExtractor('https://youtu.be/1sWNF4n6-pM'), '1sWNF4n6-pM')
+        self.assertEqual(Utils.youtubeIdExtractor('https://www.youtube.com/watch?v=1sWNF4n6-pM'), '1sWNF4n6-pM')
+
+    def check_video_url(self):
+        self.assertEqual(Utils.check_video_url('dsSbhW7JoCg'), True)
+        self.assertEqual(Utils.check_video_url('B9KjBEFZ3io'), True)
+        self.assertEqual(Utils.check_video_url('1sWNF4n6-pM'), True)
+
+        self.assertEqual(Utils.check_video_url('dsSbhW7JoCg1'), False)
+        self.assertEqual(Utils.check_video_url('B9KjBEFZ3Io'), False)
+        self.assertEqual(Utils.check_video_url('1sWNF4n6-pMk'), False)
+
+    def adjust_timestamp(self):
+        self.assertEqual(Utils.adjustTimestamp(170), '0 hour(s) 2 minute(s) 50 second(s)')
+        self.assertEqual(Utils.adjustTimestamp(3600), '1 hour(s) 0 minute(s) 0 second(s)')
+        self.assertEqual(Utils.adjustTimestamp(60), '0 hour(s) 1 minute(s) 0 second(s)')
+        self.assertEqual(Utils.adjustTimestamp(3661), '1 hour(s) 1 minute(s) 1 second(s)')
+        self.assertEqual(Utils.adjustTimestamp(3661), '1 hour(s) 1 minute(s) 1 second(s)')        
+
+class TestCaptionProcessor(unittest.TestCase):
+    def test_get_caption(self):
+        self.assertGreater(len(CaptionProcessor.getCaption('dsSbhW7JoCg')), 0)
+
+class TestIndexProcessor(unittest.TestCase):
+    def test_search(self):
+        ip = IndexProcessor('http://localhost:8983/solr/caption_indexer_core/')        
+        ip.clearIndex()        
+        ip.indexCaption([ {'start': 1, 'caption': 'palavras juntas'},
+                            {'start': 2, 'caption': 'palavras lorem ipsum juntas'},
+                            {'start': 3, 'caption': 'palavras lorem ipsum dolor sit juntas'},
+                            {'start': 4, 'caption': 'palavras lorem ipsum dolor sit amet consectetur juntas'},
+                            {'start': 5, 'caption': 'palavras lorem ipsum'},
+                            {'start': 6, 'caption': 'lorem ipsum juntas'},
+                            {'start': 7, 'caption': 'nenhuma das anteriores'}])
+        
+        
+        results = ip.search('palavras juntas')
+        #Verificando se pegou os resultados de 1 a 6 como esperado
+        self.assertEqual(len(results), 6)
+        
+        #Verificando se o resultado está ordenado da forma correta, e.g. "palavras juntas" 
+        #devem ter score maior por proximidade na frase, keywords individuais ainda aparecem 
+        # porem com score menor ainda.
+        i = 1
+        for res in results:
+            self.assertEqual(res['start'][0], i)
+            i+=1
+        ip.solr.get_session().close()
+
+if __name__ == '__main__':
+    unittest.main()
+
