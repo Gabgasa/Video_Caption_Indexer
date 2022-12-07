@@ -14,7 +14,8 @@ O projeto consiste das seguintes etapas:
 * Para extrair as Captions dos vídeos do youtube foi utilizado o pacote ***youtube-transcript-api***
 * O pacote **pysolr** foi usado como cliente do Apache Solr na codificação do programa.
 ## Arquitetura do projeto
-![Diagrama simples](/diagram/diagram.png "Diagrama simples")
+
+<img src="diagram/diagram.png" alt="simple diagram of the project" width="500"/>
 
 Foram utilizadas duas classes para a codificação do projeto:
 1. A primeira classe se chama **CaptionProcessor** e é responsável pela recuperação e formatação da Caption do youtube, entregando somente as informações que serão indexadas.
