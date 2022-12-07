@@ -28,5 +28,5 @@ Foram utilizadas duas classes para a codificação do projeto:
 * Antes de tudo deve-se levantar um servidor de solr, se for utilizado um docker pode-se usar o comando **docker run -d -p 8983:8983 --name [nome qualquer] solr solr-create -c [nome do core do solr]**.
 * Para instalar as dependências utilize o comando **pip install -r requirements.txt**
 * Para executar os testes deve-se usar o comando **python Tests.py -v** na raiz do projeto.
-* Para executar o projeto deve-se usar o comando **python main.py [link do youtube entre aspas] [palavras chaves]**, o link do youtube e as palavras-chave devem estar entre aspas.
+* Para executar o projeto deve-se usar o comando **python main.py [link do youtube entre aspas] [palavras chaves]**, o link do youtube e as palavras-chave devem estar entre aspas. Ex: **python main.py "https://www.youtube.com/watch?v=3AfjJ2dwfIk" "Palavra Chave" 
 
