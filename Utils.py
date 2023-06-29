@@ -1,4 +1,5 @@
 import requests
+import time
 
 def youtubeIdExtractor(youtube_link : str) -> str:
     """Will attempt to extract the id from the youtube video.
@@ -56,12 +57,9 @@ def adjustTimestamp(seconds : int) -> str:
     Returns:
         str: A formated time with hours minutes and seconds
     """
-    assert seconds > 0
+    assert seconds >= 0
 
-    hours = int(seconds/3600)
-    minutes = int(seconds/60)
-    seconds = seconds - hours*3600 - minutes*60
-    return "{0} hour(s) {1} minute(s) {2} second(s)".format(hours,minutes,seconds)
+    return time.strftime("%H hour(s) %M minute(s) %S second(s)", time.gmtime(seconds))
 
 def showResults(results : dict[list[int], str, str, str]) -> None:
     """This function will format and display the results found by the query.
